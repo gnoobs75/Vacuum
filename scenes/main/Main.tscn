@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3]
+[gd_scene load_steps=28 format=3]
 
 [ext_resource type="Script" path="res://src/Core/GameManager.cs" id="1"]
 [ext_resource type="Script" path="res://src/Core/GameEventBus.cs" id="2"]
@@ -21,6 +21,13 @@
 [ext_resource type="Script" path="res://src/Systems/Flight/EscortManager.cs" id="19"]
 [ext_resource type="Script" path="res://src/UI/DebugStatsPanel.cs" id="20"]
 [ext_resource type="Script" path="res://src/Systems/Mining/AsteroidMinerSpawner.cs" id="21"]
+[ext_resource type="Script" path="res://src/Systems/Mining/TargetingSystem.cs" id="22"]
+[ext_resource type="Script" path="res://src/Systems/Mining/CargoHold.cs" id="23"]
+[ext_resource type="Script" path="res://src/Systems/Mining/MiningLaserSystem.cs" id="24"]
+[ext_resource type="Script" path="res://src/Systems/Mining/OreReprocessor.cs" id="25"]
+[ext_resource type="Script" path="res://src/UI/MiningHUD.cs" id="26"]
+[ext_resource type="Script" path="res://src/UI/ReprocessingHUD.cs" id="27"]
+[ext_resource type="Script" path="res://src/Systems/AI/ClaimJumperSpawner.cs" id="28"]
 
 [sub_resource type="BoxShape3D" id="ship_shape"]
 size = Vector3(4, 2, 8)
@@ -77,6 +84,24 @@ script = ExtResource("13")
 [node name="PositionSync" type="Node" parent="PlayerShip"]
 script = ExtResource("14")
 
+[node name="TargetingSystem" type="Node" parent="PlayerShip"]
+script = ExtResource("22")
+ShipPath = ".."
+
+[node name="CargoHold" type="Node" parent="PlayerShip"]
+script = ExtResource("23")
+
+[node name="MiningLaser" type="Node" parent="PlayerShip"]
+script = ExtResource("24")
+ShipPath = ".."
+TargetingPath = "../TargetingSystem"
+CargoHoldPath = "../CargoHold"
+
+[node name="OreReprocessor" type="Node" parent="PlayerShip"]
+script = ExtResource("25")
+ShipPath = ".."
+CargoHoldPath = "../CargoHold"
+
 [node name="OrbitCamera" type="Camera3D" parent="."]
 script = ExtResource("18")
 TargetPath = "../PlayerShip"
@@ -88,6 +113,11 @@ PlayerShipPath = "../PlayerShip"
 [node name="AsteroidMinerSpawner" type="Node3D" parent="."]
 script = ExtResource("21")
 SolarSystemPath = "../SolarSystem"
+
+[node name="ClaimJumperSpawner" type="Node3D" parent="."]
+script = ExtResource("28")
+PlayerShipPath = "../PlayerShip"
+MiningLaserPath = "../PlayerShip/MiningLaser"
 
 [node name="HUD" type="Control" parent="."]
 layout_mode = 3
@@ -152,6 +182,27 @@ offset_top = 220.0
 offset_right = 310.0
 offset_bottom = 520.0
 script = ExtResource("20")
+
+[node name="MiningHUD" type="PanelContainer" parent="HUD"]
+layout_mode = 0
+offset_left = 1560.0
+offset_top = 10.0
+offset_right = 1910.0
+offset_bottom = 500.0
+script = ExtResource("26")
+TargetingPath = "../../PlayerShip/TargetingSystem"
+MiningLaserPath = "../../PlayerShip/MiningLaser"
+CargoHoldPath = "../../PlayerShip/CargoHold"
+
+[node name="ReprocessingHUD" type="PanelContainer" parent="HUD"]
+layout_mode = 0
+offset_left = 660.0
+offset_top = 200.0
+offset_right = 1260.0
+offset_bottom = 700.0
+script = ExtResource("27")
+ReprocessorPath = "../../PlayerShip/OreReprocessor"
+CargoHoldPath = "../../PlayerShip/CargoHold"
 
 [node name="SolarSystemMap" type="Control" parent="."]
 layout_mode = 3

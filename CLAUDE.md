@@ -81,12 +81,19 @@ Vacuum/
 - Asteroid belt miners: 2 mining escorts per asteroid with visual mining laser effects (beams, sparks, impact lights)
 - Debug stats panel (F3): FPS, frame time, draw calls, objects, primitives, VRAM, node counts, escort/miner counts, memory
 
-### Phase 2: Mining
-- Mining laser module (equippable to ship)
-- Asteroid types with different ore compositions
-- Ore cargo hold with capacity limits
-- Ore refining at stations (ore -> minerals)
-- Asteroid depletion and respawn
+### Phase 2: Mining ✅
+- Mining laser system (F1 to toggle) with 5-second cycle times and yield calculations
+- 9 ore types (Veldspar through Mercoxit) with rarity, yields, and mineral recipes
+- 8 mineral types (Tritanium through Morphite) with value hierarchy
+- Asteroids color-tinted by ore type, distributed by distance from star
+- Asteroid depletion (shrink + hide) with 120-second respawn
+- Targeting system (T to cycle nearby asteroids within 200m)
+- Cargo hold with 500m³ volume limit
+- Mining HUD: real-time cycle progress, yield stats, cargo inventory
+- Ore reprocessing at stations (F to dock, R to reprocess) with 70% base efficiency
+- Reprocessing UI with mineral wallet and credit valuations
+- Claim jumper AI: hostile NPCs spawn during extended mining, chase and fire projectiles
+- Claim jumper difficulty scales with mining duration
 
 ### Phase 3: Trading & Economy
 - Station markets with buy/sell orders

@@ -1,4 +1,6 @@
 using Godot;
+using Vacuum.Data;
+using Vacuum.Systems.Mining;
 
 namespace Vacuum.Entities;
 
@@ -153,14 +155,24 @@ public partial class SolarSystemGenerator : Node3D
             float dist = AsteroidBeltRadius + (float)GD.RandRange(-AsteroidBeltWidth / 2, AsteroidBeltWidth / 2);
             float size = (float)GD.RandRange(1, 8);
 
+            // Assign ore type based on distance from star
+            string[] orePool = OreDatabase.GetOresForDistance(dist, AsteroidBeltRadius);
+            string oreId = orePool[(int)(GD.Randi() % orePool.Length)];
+            float totalOre = size * (float)GD.RandRange(80, 200);
+
             var asteroid = new MeshInstance3D { Name = $"Asteroid_{i}" };
             var box = new BoxMesh
             {
                 Size = new Vector3(size, size * 0.7f, size * 0.8f)
             };
+
+            // Tint asteroid color by ore type
+            var mineable = new MineableAsteroid();
+            mineable.Initialize(oreId, totalOre);
+
             var mat = new StandardMaterial3D
             {
-                AlbedoColor = new Color(0.55f, 0.5f, 0.45f),
+                AlbedoColor = mineable.GetOreColor(),
                 Roughness = 0.9f,
                 Metallic = 0.2f
             };
@@ -178,6 +190,8 @@ public partial class SolarSystemGenerator : Node3D
                 (float)GD.RandRange(0, 360)
             );
 
+            mineable.Name = "MineableAsteroid";
+            asteroid.AddChild(mineable);
             beltNode.AddChild(asteroid);
         }
 
