@@ -1,0 +1,21 @@
+# Godot
+.godot/
+*.import
+
+# .NET
+bin/
+obj/
+
+# IDE
+.vs/
+*.user
+*.suo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Misc
+nul
+.claude/
+.mcp.json

@@ -1,0 +1,164 @@
+[gd_scene load_steps=21 format=3]
+
+[ext_resource type="Script" path="res://src/Core/GameManager.cs" id="1"]
+[ext_resource type="Script" path="res://src/Core/GameEventBus.cs" id="2"]
+[ext_resource type="Script" path="res://src/Core/BackgroundTaskProcessor.cs" id="3"]
+[ext_resource type="Script" path="res://src/Core/InputManager.cs" id="4"]
+[ext_resource type="Script" path="res://src/Systems/Navigation/NavigationService.cs" id="5"]
+[ext_resource type="Script" path="res://src/Systems/Navigation/PathfindingService.cs" id="6"]
+[ext_resource type="Script" path="res://src/Systems/Navigation/WormholeSystem.cs" id="7"]
+[ext_resource type="Script" path="res://src/Entities/SolarSystemGenerator.cs" id="8"]
+[ext_resource type="Script" path="res://src/UI/NavigationHUD.cs" id="9"]
+[ext_resource type="Script" path="res://src/Systems/Flight/ShipPhysics.cs" id="10"]
+[ext_resource type="Script" path="res://src/Systems/Flight/ShipFlightController.cs" id="11"]
+[ext_resource type="Script" path="res://src/Systems/Navigation/WarpDriveSystem.cs" id="12"]
+[ext_resource type="Script" path="res://src/Systems/Navigation/AutopilotSystem.cs" id="13"]
+[ext_resource type="Script" path="res://src/Systems/Navigation/ShipPositionSync.cs" id="14"]
+[ext_resource type="Script" path="res://src/Entities/Starfield.cs" id="15"]
+[ext_resource type="Script" path="res://src/UI/SolarSystemMap.cs" id="16"]
+[ext_resource type="PackedScene" path="res://assets/models/ships/Miner.glb" id="17"]
+[ext_resource type="Script" path="res://src/Systems/Flight/OrbitCamera.cs" id="18"]
+[ext_resource type="Script" path="res://src/Systems/Flight/EscortManager.cs" id="19"]
+[ext_resource type="Script" path="res://src/UI/DebugStatsPanel.cs" id="20"]
+[ext_resource type="Script" path="res://src/Systems/Mining/AsteroidMinerSpawner.cs" id="21"]
+
+[sub_resource type="BoxShape3D" id="ship_shape"]
+size = Vector3(4, 2, 8)
+
+[node name="Main" type="Node"]
+
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource("1")
+
+[node name="GameEventBus" type="Node" parent="."]
+script = ExtResource("2")
+
+[node name="BackgroundTaskProcessor" type="Node" parent="."]
+script = ExtResource("3")
+
+[node name="InputManager" type="Node" parent="."]
+script = ExtResource("4")
+
+[node name="NavigationService" type="Node" parent="."]
+script = ExtResource("5")
+
+[node name="PathfindingService" type="Node" parent="."]
+script = ExtResource("6")
+
+[node name="WormholeSystem" type="Node" parent="."]
+script = ExtResource("7")
+
+[node name="Starfield" type="Node3D" parent="."]
+script = ExtResource("15")
+
+[node name="SolarSystem" type="Node3D" parent="."]
+script = ExtResource("8")
+
+[node name="PlayerShip" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 200)
+gravity_scale = 0.0
+linear_damp = 0.3
+script = ExtResource("10")
+
+[node name="ShipModel" parent="PlayerShip" instance=ExtResource("17")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerShip"]
+shape = SubResource("ship_shape")
+
+[node name="FlightController" type="Node" parent="PlayerShip"]
+script = ExtResource("11")
+
+[node name="WarpDriveSystem" type="Node" parent="PlayerShip"]
+script = ExtResource("12")
+
+[node name="AutopilotSystem" type="Node" parent="PlayerShip"]
+script = ExtResource("13")
+
+[node name="PositionSync" type="Node" parent="PlayerShip"]
+script = ExtResource("14")
+
+[node name="OrbitCamera" type="Camera3D" parent="."]
+script = ExtResource("18")
+TargetPath = "../PlayerShip"
+
+[node name="EscortManager" type="Node3D" parent="."]
+script = ExtResource("19")
+PlayerShipPath = "../PlayerShip"
+
+[node name="AsteroidMinerSpawner" type="Node3D" parent="."]
+script = ExtResource("21")
+SolarSystemPath = "../SolarSystem"
+
+[node name="HUD" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("9")
+ShipPath = "../PlayerShip"
+WarpDrivePath = "../PlayerShip/WarpDriveSystem"
+AutopilotPath = "../PlayerShip/AutopilotSystem"
+
+[node name="TopLeft" type="VBoxContainer" parent="HUD"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 350.0
+offset_bottom = 200.0
+
+[node name="SpeedLabel" type="Label" parent="HUD/TopLeft"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "SPD: 0 m/s"
+
+[node name="HeadingLabel" type="Label" parent="HUD/TopLeft"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "HDG: (0, 0, 0)"
+
+[node name="PositionLabel" type="Label" parent="HUD/TopLeft"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "POS: (0, 0, 0)"
+
+[node name="WarpStatusLabel" type="Label" parent="HUD/TopLeft"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "WARP: Ready"
+
+[node name="AutopilotLabel" type="Label" parent="HUD/TopLeft"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "AP: OFF"
+
+[node name="TargetLabel" type="Label" parent="HUD/TopLeft"]
+unique_name_in_owner = true
+layout_mode = 2
+text = ""
+
+[node name="WarpProgress" type="ProgressBar" parent="HUD"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 0.0
+offset_right = 1920.0
+offset_bottom = 20.0
+visible = false
+
+[node name="DebugStatsPanel" type="PanelContainer" parent="HUD"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 220.0
+offset_right = 310.0
+offset_bottom = 520.0
+script = ExtResource("20")
+
+[node name="SolarSystemMap" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("16")
+ShipPath = "../PlayerShip"
+SolarSystemPath = "../SolarSystem"
