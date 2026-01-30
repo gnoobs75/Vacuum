@@ -10,6 +10,8 @@ public class FactionData
     public string FactionId { get; set; } = Guid.NewGuid().ToString();
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public string Race { get; set; } = string.Empty;
+    public string GovernmentType { get; set; } = string.Empty;
 }
 
 /// <summary>

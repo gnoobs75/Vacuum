@@ -79,13 +79,7 @@ public enum WormholeClassification
     Collapsing
 }
 
-public enum CorporationRole
-{
-    Member,
-    Officer,
-    Director,
-    CEO
-}
+// CorporationRole moved to CorporationEnums.cs
 
 public enum WarpState
 {

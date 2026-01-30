@@ -42,4 +42,6 @@ public class ModuleSlotData
     public string ShipId { get; set; } = string.Empty;
     public SlotType SlotType { get; set; }
     public string? ModuleId { get; set; }
+    public float HeatLevel { get; set; }
+    public bool Active { get; set; }
 }
